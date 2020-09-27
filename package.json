@@ -1,0 +1,17 @@
+{
+  "name": "IAT_Server",
+  "version": "1.0.0",
+  "description": "금오공과대학교 최정아 교수님 연구용 안드로이드 앱 IAT의 node.js서버",
+  "main": "index.js",
+  "repository": "https://github.com/rosf73/IAT_Server.git",
+  "author": "rosf73 <47631768+rosf73@users.noreply.github.com>",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.4"
+  },
+  "scripts": {
+    "start": "nodemon ./index.js"
+  }
+}

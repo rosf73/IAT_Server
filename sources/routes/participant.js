@@ -48,12 +48,15 @@ router.post("/signup", (req, res) => {
   if (!req.body.major) {
     errors.push("No major specified");
   }
+  if (!req.body.day) {
+    errors.push("No day specified");
+  }
   if (errors.length) {
     res.status(400).json({ "error": errors.join(",") });
     return;
   }
 
-  var params =[md5(req.body.phone_num), req.body.age, req.body.gender, req.body.grade, req.body.major];
+  var params =[md5(req.body.phone_num), req.body.age, req.body.gender, req.body.grade, req.body.major, req.body.day];
   db.run(insertParticipantQuery, params, (err, result) => {
     if (err) {
       res.status(400).json({ "error": err.message })

@@ -6,6 +6,10 @@ exports.dropDataQuery = `
   DROP TABLE IF EXISTS data
 `;
 
+exports.dropAnswerQuery = `
+  DROP TABLE IF EXISTS answer
+`;
+
 exports.createParticipantQuery = `
   CREATE TABLE IF NOT EXISTS participant (
     phone_num VARCHAR(20) NOT NULL PRIMARY KEY,
@@ -22,21 +26,31 @@ exports.createParticipantQuery = `
 
 exports.createDataQuery = `
   CREATE TABLE IF NOT EXISTS data (
-    phone_num VARCHAR(20) NOT NULL 
+    data_id INT NOT NULL PRIMARY KEY AUTOINCREMENT,
+    day INT NOT NULL,
+    time INT NOT NULL,
+    test_data VARCHAR(500) NOT NULL,
+    phone_num VARCHAR(20) NOT NULL FOREIGN KEY
+  )
+`;
+
+exports.createAnswerQuery = `
+  CREATE TABLE IF NOT EXISTS answer (
+    answer_id INT NOT NULL PRIMARY KEY AUTOINCREMENT,
+    day INT NOT NULL,
+    answer_data VARCHAR(300) NOT NULL,
+    phone_num VARCHAR(20) NOT NULL FOREIGN KEY
   )
 `;
 
 exports.insertParticipantQuery = `
-  INSERT INTO participant(phone_num, age, gender, grade, major) values (?, ?, ?, ?, ?)
+  INSERT INTO participant(phone_num, age, gender, grade, major) VALUES (?, ?, ?, ?, ?)
 `;
 
-exports.dummyDataQuery = `
-  INSERT INTO participant(phone_num, age, gender, grade, major) values
-    ('01012345678', 13, 1, 40, '컴퓨터'),
-    ('01094385742', 49, 2, 40, '경영'),
-    ('01039947369', 22, 2, 33, '수학교육')
+exports.insertDataQuery = `
+  INSERT INTO data(day, time, test_data, phone_num) VALUES (?, ?, ?, ?)
 `;
 
-exports.selectAllQuery = `
-  SELECT * FROM participant
+exports.insertAnswerQuery = `
+  INSERT INTO answer(day, answer_data, phone_num) VALUES (?, ?, ?)
 `;

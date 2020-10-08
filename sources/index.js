@@ -9,18 +9,10 @@ app.use(express.json()); // req body의 json 형태 수신 허용
 
 app.use('/participant', require('./routes/participant'));
 
+app.use('/data', require('./routes/data'));
+
+app.use('/answer', require('./routes/answer'));
+
 http.createServer(app).listen(port, () => { // https를 위해 7540 포트 오픈 
   console.log(`Server running on http://localhost:${port}`);
 });
-
-// // 서버 종료 시 db close 및 server close
-// process.on('SIGINT', () => {
-//   server.close();
-//   db.close((err) => {
-//     if (err) {
-//       console.error(err.message);
-//     } else {
-//       console.log('Close the database connection.');
-//     }
-//   });
-// });

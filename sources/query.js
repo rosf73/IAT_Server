@@ -16,7 +16,8 @@ exports.createParticipantQuery = `
     age INT NOT NULL,
     gender INT NOT NULL,
     grade INT NOT NULL,
-    major VARCHAR(30) NOT NULL
+    major VARCHAR(30) NOT NULL,
+    day INT NOT NULL
   )
 `;
 /*

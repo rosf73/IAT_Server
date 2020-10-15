@@ -17,15 +17,15 @@ router.get("/all", (req, res) => {
 });
 
 router.post('/signin', (req, res) => {
-  var sql = "SELECT phone_num FROM participant WHERE phone_num = ?";
+  var sql = "SELECT progress FROM participant WHERE phone_num = ?";
   var params = [md5(req.body.phone_num)];
   db.get(sql, params, (err, row) => {
     if (err) {
       res.status(400).json({ "error": err.message });
       return;
     }
-    if (row) 
-      res.send("EXIST");
+    if (row)
+      res.send("EXIST" + row.progress);
     else
       res.send("NO_EXIST");
   });
@@ -51,12 +51,15 @@ router.post("/signup", (req, res) => {
   if (!req.body.day) {
     errors.push("No day specified");
   }
+  if (req.body.progress === null || req.body.progress === undefined) {
+    errors.push("No progress specified");
+  }
   if (errors.length) {
     res.status(400).json({ "error": errors.join(",") });
     return;
   }
 
-  var params =[md5(req.body.phone_num), req.body.age, req.body.gender, req.body.grade, req.body.major, req.body.day];
+  var params =[md5(req.body.phone_num), req.body.age, req.body.gender, req.body.grade, req.body.major, req.body.day, req.body.progress];
   db.run(insertParticipantQuery, params, (err, result) => {
     if (err) {
       res.status(400).json({ "error": err.message })

@@ -14,10 +14,10 @@ const db = new sqlite.Database('./db/myDB.db', sqlite.OPEN_READWRITE, (err) => {
     db.run(createParticipantQuery, (err) => {
       if (err) { /** Already created Table */ }
       else {
-        db.run(insertParticipantQuery, [md5("01012345678"), 18, 2, 22, "none", 1]);
-        db.run(insertParticipantQuery, [md5("01066775544"), 18, 1, 22, "none", 1]);
-        db.run(insertParticipantQuery, [md5("01087654321"), 21, 1, 31, "none", 1]);
-        db.run(insertParticipantQuery, [md5("01075757575"), 50, 2, 40, "컴퓨터공학", 1]);
+        db.run(insertParticipantQuery, [md5("01012345678"), 18, 2, 22, "none", 1, 0]);
+        db.run(insertParticipantQuery, [md5("01066775544"), 18, 1, 22, "none", 1, 0]);
+        db.run(insertParticipantQuery, [md5("01087654321"), 21, 1, 31, "none", 1, 0]);
+        db.run(insertParticipantQuery, [md5("01075757575"), 50, 2, 40, "컴퓨터공학", 1, 0]);
       }
     });
     db.run(createDataQuery, (err) => {

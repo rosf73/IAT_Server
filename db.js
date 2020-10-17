@@ -10,4 +10,15 @@ const db = new sqlite.Database('./myDB.db', sqlite.OPEN_READWRITE, (err) => {
   }
 });
 
+db.query = (sql, params) => {
+  return new Promise((resolve, reject) => {
+    db.all(sql, params, (error, rows) => {
+      if (error)
+        reject(error);
+      else
+        resolve(rows);
+    });
+  });
+}
+
 module.exports = db;

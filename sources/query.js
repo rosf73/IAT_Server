@@ -11,7 +11,7 @@ exports.dropQuestionQuery = `
   DROP TABLE IF EXISTS question
 `;
 exports.dropQuestionCaseQuery = `
-  DROP TABLE IF EXISTS question_case
+  DROP TABLE IF EXISTS base_case
 `;
 exports.dropDataQuery = `
   DROP TABLE IF EXISTS data
@@ -33,10 +33,19 @@ exports.insertTestSubject12Query = `
   INSERT INTO test_subject(subject, left_subject1_id, right_subject1_id, right_subject2_id) VALUES (?, ?, ?, ?)
 `;
 exports.insertQuestionQuery = `
-  INSERT INTO question(question_id, content) VALUES (?, ?)
+  INSERT INTO question(question_id, content, type, sub_content) VALUES (?, ?, ?, ?)
 `;
-exports.insertQuestionCaseQuery = `
-  INSERT INTO question_case(number, content, is_assay, question_id) VALUES (?, ?, ?, ?)
+exports.insertSubQuestionQuery = `
+  INSERT INTO sub_question(number, content, question_id) VALUES (?, ?, ?)
+`;
+exports.insertBaseCaseQuery = `
+  INSERT INTO base_case(number, content, is_assay, question_id) VALUES (?, ?, ?, ?)
+`;
+exports.insertTableCaseQuery = `
+  INSERT INTO table_case(number, content, question_id) VALUES (?, ?, ?)
+`;
+exports.insertSubCaseQuery = `
+  INSERT INTO sub_case(number, content, sub_question_id) VALUES (?, ?, ?)
 `;
 exports.insertDataQuery = `
   INSERT INTO data(day, time, test_data, phone_num) VALUES (?, ?, ?, ?)

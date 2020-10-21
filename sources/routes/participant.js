@@ -14,17 +14,25 @@ router.get("/all", (req, res) => {
 });
 
 router.post('/signin', (req, res) => {
-  var sql = "SELECT progress FROM participant WHERE phone_num = ?";
-  var params = [md5(req.body.phone_num)];
-  db.get(sql, params, (err, row) => {
+  db.get("SELECT progress FROM participant WHERE phone_num = ?", md5(req.body.phone_num), (err, row) => {
     if (err) {
       res.status(400).json({ "error": err.message });
       return;
     }
-    if (row)
-      res.send("EXIST" + row.progress);
-    else
-      res.send("NO_EXIST");
+    db.all(`SELECT * FROM question`, (err, rows) => {
+      if (err) {
+        res.status(400).json({ "error": err.message });
+        return;
+      }
+      if (row) {
+        if (row.progress === rows.length)
+          res.send("PASS");
+        else
+          res.send("EXIST"+row.progress);
+      }
+      else
+        res.send("NO_EXIST");
+    });
   });
 });
 

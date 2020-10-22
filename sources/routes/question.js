@@ -44,7 +44,6 @@ router.get("/all", async (req, res) => {
             return temp;
           })
         );
-        elem.sub_questions_count = elem.sub_content;
         elem.sub_contents = map_sub_question_result;
         elem.cases = map_table_case_result;
         delete elem.sub_content;

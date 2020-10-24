@@ -23,14 +23,17 @@ exports.dropAnswerQuery = `
 exports.insertParticipantQuery = `
   INSERT INTO participant(phone_num, age, gender, grade, major, day, progress) VALUES (?, ?, ?, ?, ?, ?, ?)
 `;
-exports.insertTestSubject11Query = `
-  INSERT INTO test_subject(subject, left_subject1_id, right_subject1_id) VALUES (?, ?, ?)
+exports.insertTestStep11Query = `
+  INSERT INTO test_step(step, trial, question_id, left_subject_1, right_subject_1) VALUES (?, ?, ?, ?, ?)
 `;
-exports.insertTestSubject21Query = `
-  INSERT INTO test_subject(subject, left_subject1_id, left_subject2_id, right_subject1_id) VALUES (?, ?, ?, ?)
+exports.insertTestStep21Query = `
+  INSERT INTO test_step(step, trial, question_id, left_subject_1, left_subject_2, right_subject_1) VALUES (?, ?, ?, ?, ?, ?)
 `;
-exports.insertTestSubject12Query = `
-  INSERT INTO test_subject(subject, left_subject1_id, right_subject1_id, right_subject2_id) VALUES (?, ?, ?, ?)
+exports.insertTestStep12Query = `
+  INSERT INTO test_step(step, trial, question_id, left_subject_1, right_subject_1, right_subject_2) VALUES (?, ?, ?, ?, ?, ?)
+`;
+exports.insertTestSubjectQuery = `
+  INSERT INTO test_subject(subject, word1, word2, word3, word4, word5) VALUES (?, ?, ?, ?, ?, ?)
 `;
 exports.insertQuestionQuery = `
   INSERT INTO question(question_id, content, type, sub_content) VALUES (?, ?, ?, ?)

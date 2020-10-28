@@ -13,7 +13,7 @@ router.get("/all", (req, res) => {
   });
 });
 
-router.post('/signin', (req, res) => {
+router.post("/signin", (req, res) => {
   db.get("SELECT progress FROM participant WHERE phone_num = ?", md5(req.body.phone_num), (err, row) => {
     if (err) {
       res.status(400).json({ "error": err.message });

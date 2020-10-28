@@ -51,8 +51,8 @@ exports.insertSubCaseQuery = `
   INSERT INTO sub_case(number, content, sub_question_id) VALUES (?, ?, ?)
 `;
 exports.insertDataQuery = `
-  INSERT INTO data(day, time, test_data, phone_num) VALUES (?, ?, ?, ?)
+  INSERT INTO data(day, test_data, phone_num, question_id) VALUES (?, ?, ?, ?)
 `;
 exports.insertAnswerQuery = `
-  INSERT INTO answer(answer_data, phone_num, question_id) VALUES (?, ?, ?)
+  INSERT INTO answer(day, answer_data, phone_num) VALUES (?, ?, ?)
 `;

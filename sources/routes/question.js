@@ -68,6 +68,7 @@ router.get("/all", async (req, res) => {
       }
       if (elem.type === 4) { // IAT type
         const steps_result = await db.query(`SELECT * FROM test_step WHERE question_id = ${elem.question_id}`, []);
+        const word_set = [];
         const map_steps_result = await Promise.all(
           steps_result.map(async e => {
             const title = [];
@@ -79,6 +80,12 @@ router.get("/all", async (req, res) => {
             left.push(left_subject_1[0].word3);
             left.push(left_subject_1[0].word4);
             left.push(left_subject_1[0].word5);
+
+            if (e.step === 3)
+              word_set.push({
+                subject: left_subject_1[0].subject,
+                words: [ left_subject_1[0].word1, left_subject_1[0].word2, left_subject_1[0].word3, left_subject_1[0].word4, left_subject_1[0].word5 ]
+              });
             if (e.left_subject_2 !== null && e.left_subject_2 !== undefined && e.left_subject_2 !== "") {
               const left_subject_2 = await db.query(`SELECT * FROM test_subject WHERE subject = "${e.left_subject_2}"`, []);
               title.push(left_subject_2[0].subject);
@@ -87,8 +94,15 @@ router.get("/all", async (req, res) => {
               left.push(left_subject_2[0].word3);
               left.push(left_subject_2[0].word4);
               left.push(left_subject_2[0].word5);
+
+              if (e.step === 3) 
+                word_set.push({
+                  subject: left_subject_2[0].subject,
+                  words: [ left_subject_2[0].word1, left_subject_2[0].word2, left_subject_2[0].word3, left_subject_2[0].word4, left_subject_2[0].word5 ]
+                });
             }
             else title.push("");
+
             const right_subject_1 = await db.query(`SELECT * FROM test_subject WHERE subject = "${e.right_subject_1}"`, []);
             title.push(right_subject_1[0].subject);
             right.push(right_subject_1[0].word1);
@@ -96,6 +110,12 @@ router.get("/all", async (req, res) => {
             right.push(right_subject_1[0].word3);
             right.push(right_subject_1[0].word4);
             right.push(right_subject_1[0].word5);
+
+            if (e.step === 3)
+              word_set.push({
+                subject: right_subject_1[0].subject,
+                words: [ right_subject_1[0].word1, right_subject_1[0].word2, right_subject_1[0].word3, right_subject_1[0].word4, right_subject_1[0].word5 ]
+              });
             if (e.right_subject_2 !== null && e.right_subject_2 !== undefined && e.right_subject_2 !== "") {
               const right_subject_2 = await db.query(`SELECT * FROM test_subject WHERE subject = "${e.right_subject_2}"`, []);
               title.push(right_subject_2[0].subject);
@@ -120,6 +140,7 @@ router.get("/all", async (req, res) => {
             return e;
           })
         );
+        elem.words = word_set;
         elem.steps = map_steps_result;
       }
       if (elem.type === 5) { // assay type

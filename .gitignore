@@ -104,7 +104,6 @@ dist
 .tern-port
 
 # DataBase file
-myDB.db
 sqlite3.exe
 test.json
 todo.txt

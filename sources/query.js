@@ -24,13 +24,13 @@ exports.insertParticipantQuery = `
   INSERT INTO participant(phone_num, age, gender, grade, major, day, progress) VALUES (?, ?, ?, ?, ?, ?, ?)
 `;
 exports.insertTestStep11Query = `
-  INSERT INTO test_step(step, trial, question_id, left_subject_1, right_subject_1) VALUES (?, ?, ?, ?, ?)
+  INSERT INTO test_step(step, trial, sub_question_id, left_subject_1, right_subject_1) VALUES (?, ?, ?, ?, ?)
 `;
 exports.insertTestStep21Query = `
-  INSERT INTO test_step(step, trial, question_id, left_subject_1, left_subject_2, right_subject_1) VALUES (?, ?, ?, ?, ?, ?)
+  INSERT INTO test_step(step, trial, sub_question_id, left_subject_1, left_subject_2, right_subject_1) VALUES (?, ?, ?, ?, ?, ?)
 `;
 exports.insertTestStep12Query = `
-  INSERT INTO test_step(step, trial, question_id, left_subject_1, right_subject_1, right_subject_2) VALUES (?, ?, ?, ?, ?, ?)
+  INSERT INTO test_step(step, trial, sub_question_id, left_subject_1, right_subject_1, right_subject_2) VALUES (?, ?, ?, ?, ?, ?)
 `;
 exports.insertTestSubjectQuery = `
   INSERT INTO test_subject(subject, word1, word2, word3, word4, word5) VALUES (?, ?, ?, ?, ?, ?)
@@ -51,7 +51,7 @@ exports.insertSubCaseQuery = `
   INSERT INTO sub_case(number, content, sub_question_id) VALUES (?, ?, ?)
 `;
 exports.insertDataQuery = `
-  INSERT INTO data(day, test_data, phone_num, question_id) VALUES (?, ?, ?, ?)
+  INSERT INTO data(day, test_data, phone_num, sub_question_id) VALUES (?, ?, ?, ?)
 `;
 exports.insertAnswerQuery = `
   INSERT INTO answer(day, answer_data, phone_num) VALUES (?, ?, ?)

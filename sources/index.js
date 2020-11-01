@@ -12,6 +12,7 @@ app.use('/test', require('./routes/test'));
 app.use('/question', require('./routes/question'));
 app.use('/data', require('./routes/data'));
 app.use('/answer', require('./routes/answer'));
+app.use('/information', require('./routes/information'));
 
 http.createServer(app).listen(port, () => { // https를 위해 7540 포트 오픈 
   console.log(`Server running on http://localhost:${port}`);

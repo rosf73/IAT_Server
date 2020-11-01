@@ -10,3 +10,5 @@ router.get("/all", (req, res) => {
     res.json({ "msg": "SUCCESS", "data": rows });
   });
 });
+
+module.exports = router;

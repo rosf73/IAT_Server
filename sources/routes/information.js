@@ -7,7 +7,7 @@ router.get("/all", (req, res) => {
       res.status(400).json({ "error": err.message });
       return;
     }
-    res.json({ "msg": "SUCCESS", "data": rows });
+    res.json({ "msg": "SUCCESS", "data": rows[0] });
   });
 });
 

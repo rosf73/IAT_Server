@@ -76,31 +76,31 @@ router.get("/all", async (req, res) => {
               steps_result.map(async e => {
                 const title = [];
                 const left = [], right = [];
-                const left_subject_1 = await db.query(`SELECT * FROM test_subject WHERE subject = "${e.left_subject_1}"`, [])[0];
-                title.push(left_subject_1.subject);
-                left.push(left_subject_1.word1);
-                left.push(left_subject_1.word2);
-                left.push(left_subject_1.word3);
-                left.push(left_subject_1.word4);
-                left.push(left_subject_1.word5);
+                const left_subject_1 = await db.query(`SELECT * FROM test_subject WHERE subject = "${e.left_subject_1}"`, []);
+                title.push(left_subject_1[0].subject);
+                left.push(left_subject_1[0].word1);
+                left.push(left_subject_1[0].word2);
+                left.push(left_subject_1[0].word3);
+                left.push(left_subject_1[0].word4);
+                left.push(left_subject_1[0].word5);
     
                 if (e.left_subject_2 !== null && e.left_subject_2 !== undefined && e.left_subject_2 !== "") {
-                  const left_subject_2 = await db.query(`SELECT * FROM test_subject WHERE subject = "${e.left_subject_2}"`, [])[0];
-                  title.push(left_subject_2.subject);
-                  left.push(left_subject_2.word1);
-                  left.push(left_subject_2.word2);
-                  left.push(left_subject_2.word3);
-                  left.push(left_subject_2.word4);
-                  left.push(left_subject_2.word5);
+                  const left_subject_2 = await db.query(`SELECT * FROM test_subject WHERE subject = "${e.left_subject_2}"`, []);
+                  title.push(left_subject_2[0].subject);
+                  left.push(left_subject_2[0].word1);
+                  left.push(left_subject_2[0].word2);
+                  left.push(left_subject_2[0].word3);
+                  left.push(left_subject_2[0].word4);
+                  left.push(left_subject_2[0].word5);
     
                   if (e.step === 3) {
                     word_set.push({
-                      subject: left_subject_2.subject,
-                      words: [ left_subject_2.word1, left_subject_2.word2, left_subject_2.word3, left_subject_2.word4, left_subject_2.word5 ]
+                      subject: left_subject_2[0].subject,
+                      words: [ left_subject_2[0].word1, left_subject_2[0].word2, left_subject_2[0].word3, left_subject_2[0].word4, left_subject_2[0].word5 ]
                     });
                     word_set.push({
-                      subject: left_subject_1.subject,
-                      words: [ left_subject_1.word1, left_subject_1.word2, left_subject_1.word3, left_subject_1.word4, left_subject_1.word5 ]
+                      subject: left_subject_1[0].subject,
+                      words: [ left_subject_1[0].word1, left_subject_1[0].word2, left_subject_1[0].word3, left_subject_1[0].word4, left_subject_1[0].word5 ]
                     });
                   }
                 }

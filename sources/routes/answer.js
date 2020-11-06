@@ -32,20 +32,26 @@ router.post("/upload", async (req, res) => {
     return;
   }
 
+  console.log(req.body);
+
   var map_answer_data = await Promise.all(
     req.body.answer_data.map(async elem => {
-      var question = await db.query(`SELECT type FROM question WHERE question_id = ${Number(elem.number.substring(0, 1))}`, []);
+      var num_set = elem.number.match(/\d+/g);
 
-      if (question[0].type === 4) {
-        await db.query(insertDataQuery, [req.body.day, elem.answer, md5(req.body.phone_num), Number(elem.number)]);
+      var question = await db.query(`SELECT type FROM question WHERE question_id = ${Number(num_set[0])}`, []);
+
+      elem.type = true;
+      if (question[0].type === 4 && elem.number.length <= 3) {
+        var id = await db.query(`SELECT sub_question_id FROM sub_question WHERE question_id = ${Number(num_set[0])} and number = ${Number(num_set[1])}`, []);
+        await db.query(insertDataQuery, [req.body.day, elem.answer, md5(req.body.phone_num), id[0].sub_question_id]);
+        elem.type = false;
       }
 
-      elem.number = question[0].type;
       return elem;
     })
   );
   var filtered_answer_data = await Promise.all(
-    map_answer_data.filter(elem => elem.number !== 4)
+    map_answer_data.filter(elem => elem.type !== false)
   );
   var answers = "";
   var reduced_answer_data = await Promise.all(

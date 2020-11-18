@@ -1,5 +1,5 @@
 module.exports = {
-  HTML: (title) => {
+  MAIN_HTML: (title, data) => {
     return `
       <!doctype html>
       <html>
@@ -23,6 +23,7 @@ module.exports = {
             <div>검사결과 다운로드(.csv)</div>
           </li>
         </ul>
+        ${data}
       </body>
       </html>
     `;

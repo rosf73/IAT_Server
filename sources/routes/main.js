@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const fs = require('fs')
+const crypto = require('crypto')
 
 const db = require('../../db')
 const template = require('../statics/template')
@@ -7,15 +7,33 @@ const template = require('../statics/template')
 router.get("/", async (req, res) => {
   const questions = await db.query(`SELECT type, sub_content FROM question ORDER BY question_id ASC`, []);
   const answers = await db.query(`SELECT day, answer_data, phone_num FROM answer ORDER BY answer_id ASC`, []);
-  const data = await db.query(`SELECT day, test_data, phone_num FROM data ORDER BY data_id ASC`, []);
+  const data = await db.query(`SELECT * FROM data ORDER BY data_id ASC`, []);
   const map_answers = await Promise.all(
     answers.map(async elem => {
       const user = await db.query(`SELECT * FROM participant WHERE phone_num = ${elem.phone_num}`, []);
 
+      const decipher = crypto.createDecipheriv('aes-256-cbc', process.env.CIPHER_KEY);
+      let result = decipher.update(elem.phone_num, 'base64', 'utf8');
+      result += decipher.final('utf8');
+
+      elem.phone_num = result;
       elem.age = user[0].age;
       elem.gender = user[0].gender;
       elem.major = user[0].major;
       elem.grade = user[0].grade;
+      return elem;
+    })
+  );
+  const map_data = await Promise.all(
+    answers.map(async elem => {
+      const sub_question = await db.query(`SELECT * FROM sub_question WHERE sub_question_id = ${elem.sub_question_id}`, []);
+
+      const decipher = crypto.createDecipheriv('aes-256-cbc', process.env.CIPHER_KEY);
+      let result = decipher.update(elem.phone_num, 'base64', 'utf8');
+      result += decipher.final('utf8');
+
+      elem.phone_num = result;
+      elem.question = sub_question[0].question_id + "_" + elem.number;
       return elem;
     })
   );
@@ -34,14 +52,14 @@ router.get("/", async (req, res) => {
   }
 
   var a_str = "";
-  for (var i = 0; i < answers.length; i++) {
-    a_str += answers[i].answer_data;
-    a_str += answers[i].age + "," + answers[i].gender + "," + answers[i].major + "," + answers[i].grade + "\n" + answers[i].day + "," + answers[i].phone_num + "\n";
+  for (var i = 0; i < map_answers.length; i++) {
+    a_str += map_answers[i].answer_data;
+    a_str += map_answers[i].age + "," + map_answers[i].gender + "," + map_answers[i].major + "," + map_answers[i].grade + "\n" + map_answers[i].day + "," + map_answers[i].phone_num + "\n";
   }
 
   var d_str = "step,반응 시간(ms),z점수\n";
   for (var i = 0; i < data.length; i++) {
-    d_str += data[i].test_data;
+    d_str += data[i].phone_num + "," + data[i].question + "\n" + data[i].test_data;
   }
   
   var title = '관리자 페이지 입니다.';

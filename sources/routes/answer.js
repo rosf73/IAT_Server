@@ -1,5 +1,6 @@
 const router = require('express').Router()
-const md5 = require('md5')
+const crypto = require('crypto')
+
 const db = require('../../db')
 const { insertAnswerQuery, insertDataQuery } = require('../query')
 
@@ -32,7 +33,9 @@ router.post("/upload", async (req, res) => {
     return;
   }
 
-  console.log(req.body);
+  const cipher = crypto.createCipheriv('aes-256-cbc', process.env.CIPHER_KEY); // aes245cbc 알고리즘으로 전화번호 암호화
+  let result = cipher.update(req.body.phone_num, 'utf8', 'base64');
+  result += cipher.final('base64');
 
   var map_answer_data = await Promise.all(
     req.body.answer_data.map(async elem => {
@@ -43,7 +46,7 @@ router.post("/upload", async (req, res) => {
       elem.type = true;
       if (question[0].type === 4 && elem.number.length <= 3) {
         var id = await db.query(`SELECT sub_question_id FROM sub_question WHERE question_id = ${Number(num_set[0])} and number = ${Number(num_set[1])}`, []);
-        await db.query(insertDataQuery, [req.body.day, elem.answer, md5(req.body.phone_num), id[0].sub_question_id]);
+        await db.query(insertDataQuery, [req.body.day, elem.answer, result, id[0].sub_question_id]);
         elem.type = false;
       }
 
@@ -62,7 +65,7 @@ router.post("/upload", async (req, res) => {
     })
   );
 
-  var params =[req.body.day, answers, md5(req.body.phone_num)];
+  var params =[req.body.day, answers, result];
   db.run(insertAnswerQuery, params, (err, result) => {
     if (err) {
       res.status(400).json({ "error": err.message })

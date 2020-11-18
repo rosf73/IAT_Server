@@ -1,5 +1,6 @@
 const router = require('express').Router()
-const md5 = require('md5')
+const crypto = require('crypto')
+
 const db = require('../../db')
 const { insertParticipantQuery } = require('../query')
 
@@ -14,7 +15,11 @@ router.get("/all", (req, res) => {
 });
 
 router.post("/signin", (req, res) => {
-  db.get("SELECT progress FROM participant WHERE phone_num = ?", md5(req.body.phone_num), (err, row) => {
+  const cipher = crypto.createCipheriv('aes-256-cbc', process.env.CIPHER_KEY); // aes245cbc 알고리즘으로 전화번호 암호화
+  let result = cipher.update(req.body.phone_num, 'utf8', 'base64');
+  result += cipher.final('base64');
+
+  db.get("SELECT progress FROM participant WHERE phone_num = ?", result, (err, row) => {
     if (err) {
       res.status(400).json({ "error": err.message });
       return;
@@ -64,7 +69,11 @@ router.post("/signup", (req, res) => {
     return;
   }
 
-  var params =[md5(req.body.phone_num), req.body.age, req.body.gender, req.body.grade, req.body.major, req.body.day, req.body.progress];
+  const cipher = crypto.createCipheriv('aes-256-cbc', process.env.CIPHER_KEY); // aes245cbc 알고리즘으로 전화번호 암호화
+  let result = cipher.update(req.body.phone_num, 'utf8', 'base64');
+  result += cipher.final('base64');
+
+  var params =[result, req.body.age, req.body.gender, req.body.grade, req.body.major, req.body.day, req.body.progress];
   db.run(insertParticipantQuery, params, (err, result) => {
     if (err) {
       res.status(400).json({ "error": err.message })

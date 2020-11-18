@@ -1,13 +1,17 @@
 const express = require('express')
 const http = require('http')
+const path = require('path')
 require('./env')
 
 const port = process.env.PORT; // 직접 지정한 환경변수 이용
 const app = express()
 
 app.use(express.json()); // req body의 json 형태 수신 허용
+app.use(express.static(path.join(__dirname + '/statics'))); // static 파일 폴더 지정
 
-app.use('/participant', require('./routes/participant')); // route
+// route
+app.use('/', require('./routes/main'));
+app.use('/participant', require('./routes/participant'));
 app.use('/test', require('./routes/test'));
 app.use('/question', require('./routes/question'));
 app.use('/data', require('./routes/data'));

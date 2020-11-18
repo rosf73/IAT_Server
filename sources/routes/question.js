@@ -1,6 +1,4 @@
 const router = require('express').Router()
-const e = require('express');
-const md5 = require('md5')
 const db = require('../../db')
 
 router.get("/all", async (req, res) => {

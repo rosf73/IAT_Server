@@ -1,0 +1,24 @@
+* {
+  margin: 0 auto;
+}
+h1 {
+  text-align: center;
+  margin-top: 20px;
+}
+.dbtn {
+  display: table;
+  padding: 100px;
+  text-align: center;
+}
+.dbtn li {
+  display: inline-block;
+  align-content: center;
+  padding: 100px;
+}
+input {
+  width: 100px;
+  margin-bottom: 10px;
+}
+input:focus {
+    outline: none;
+}

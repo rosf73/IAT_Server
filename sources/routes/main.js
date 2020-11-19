@@ -10,13 +10,30 @@ router.get("/", async (req, res) => {
   const data = await db.query(`SELECT * FROM data ORDER BY data_id ASC`, []);
   const map_answers = await Promise.all(
     answers.map(async elem => {
-      const user = await db.query(`SELECT * FROM participant WHERE phone_num = ${elem.phone_num}`, []);
+      const participants = await db.query(`SELECT phone_num, progress, iv FROM participant`, []);
+      let participant = await Promise.all(
+        participants.filter(e => {
+          const decipher = crypto.createDecipheriv('aes-256-cbc', process.env.CIPHER_KEY, Buffer.from(e.iv, 'hex'));
+          let result = decipher.update(e.phone_num, 'base64', 'utf8');
+          result += decipher.final('utf8');
+        
+          return elem.phone_num === result;
+        })
+      );
+      participant = await Promise.all(
+        participants.map(e => {
+          const decipher = crypto.createDecipheriv('aes-256-cbc', process.env.CIPHER_KEY, Buffer.from(e.iv, 'hex'));
+          let result = decipher.update(e.phone_num, 'base64', 'utf8');
+          result += decipher.final('utf8');
+    
+          e.phone_num = result;
+          return e;
+        })
+      );
 
-      const decipher = crypto.createDecipheriv('aes-256-cbc', process.env.CIPHER_KEY);
-      let result = decipher.update(elem.phone_num, 'base64', 'utf8');
-      result += decipher.final('utf8');
+      const user = await db.query(`SELECT * FROM participant WHERE phone_num = ${participant[0].phone_num}`, []);
 
-      elem.phone_num = result;
+      elem.phone_num = participant[0].phone_num;
       elem.age = user[0].age;
       elem.gender = user[0].gender;
       elem.major = user[0].major;
@@ -25,14 +42,31 @@ router.get("/", async (req, res) => {
     })
   );
   const map_data = await Promise.all(
-    answers.map(async elem => {
+    data.map(async elem => {
       const sub_question = await db.query(`SELECT * FROM sub_question WHERE sub_question_id = ${elem.sub_question_id}`, []);
+      
+      const participants = await db.query(`SELECT phone_num, progress, iv FROM participant`, []);
+      let participant = await Promise.all(
+        participants.filter(e => {
+          const decipher = crypto.createDecipheriv('aes-256-cbc', process.env.CIPHER_KEY, Buffer.from(e.iv, 'hex'));
+          let result = decipher.update(e.phone_num, 'base64', 'utf8');
+          result += decipher.final('utf8');
+        
+          return elem.phone_num === result;
+        })
+      );
+      participant = await Promise.all(
+        participants.map(e => {
+          const decipher = crypto.createDecipheriv('aes-256-cbc', process.env.CIPHER_KEY, Buffer.from(e.iv, 'hex'));
+          let result = decipher.update(e.phone_num, 'base64', 'utf8');
+          result += decipher.final('utf8');
+    
+          e.phone_num = result;
+          return e;
+        })
+      );
 
-      const decipher = crypto.createDecipheriv('aes-256-cbc', process.env.CIPHER_KEY);
-      let result = decipher.update(elem.phone_num, 'base64', 'utf8');
-      result += decipher.final('utf8');
-
-      elem.phone_num = result;
+      elem.phone_num = participant[0].phone_num;
       elem.question = sub_question[0].question_id + "_" + elem.number;
       return elem;
     })
@@ -58,8 +92,8 @@ router.get("/", async (req, res) => {
   }
 
   var d_str = "step,반응 시간(ms),z점수\n";
-  for (var i = 0; i < data.length; i++) {
-    d_str += data[i].phone_num + "," + data[i].question + "\n" + data[i].test_data;
+  for (var i = 0; i < map_data.length; i++) {
+    d_str += map_data[i].phone_num + "," + map_data[i].question + "\n" + map_data[i].test_data;
   }
   
   var title = '관리자 페이지 입니다.';

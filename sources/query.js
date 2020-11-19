@@ -21,7 +21,7 @@ exports.dropAnswerQuery = `
 `;
 
 exports.insertParticipantQuery = `
-  INSERT INTO participant(phone_num, age, gender, grade, major, day, progress) VALUES (?, ?, ?, ?, ?, ?, ?)
+  INSERT INTO participant(phone_num, age, gender, grade, major, day, progress, meeting, iv) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 `;
 exports.insertTestStep11Query = `
   INSERT INTO test_step(step, trial, sub_question_id, left_subject_1, right_subject_1) VALUES (?, ?, ?, ?, ?)

@@ -10,6 +10,8 @@ router.get("/", async (req, res) => {
   const data = await db.query(`SELECT * FROM data ORDER BY data_id ASC`, []);
   const map_answers = await Promise.all(
     answers.map(async elem => {
+      const user = await db.query(`SELECT * FROM participant WHERE phone_num = '${elem.phone_num}'`, []);
+
       const participants = await db.query(`SELECT phone_num, progress, iv FROM participant`, []);
       let participant = await Promise.all(
         participants.filter(e => {
@@ -30,8 +32,6 @@ router.get("/", async (req, res) => {
           return e;
         })
       );
-
-      const user = await db.query(`SELECT * FROM participant WHERE phone_num = ${participant[0].phone_num}`, []);
 
       elem.phone_num = participant[0].phone_num;
       elem.age = user[0].age;
@@ -88,12 +88,12 @@ router.get("/", async (req, res) => {
   var a_str = "";
   for (var i = 0; i < map_answers.length; i++) {
     a_str += map_answers[i].answer_data;
-    a_str += map_answers[i].age + "," + map_answers[i].gender + "," + map_answers[i].major + "," + map_answers[i].grade + "\n" + map_answers[i].day + "," + map_answers[i].phone_num + "\n";
+    a_str += map_answers[i].age + "," + map_answers[i].gender + "," + map_answers[i].major + "," + map_answers[i].grade + "," + map_answers[i].day + "," + map_answers[i].phone_num.substring(0, 3) + "-" + map_answers[i].phone_num.substring(3) + "\n";
   }
 
   var d_str = "step,반응 시간(ms),z점수\n";
   for (var i = 0; i < map_data.length; i++) {
-    d_str += map_data[i].phone_num + "," + map_data[i].question + "\n" + map_data[i].test_data;
+    d_str += map_data[i].phone_num.substring(0, 3) + "-" + map_data[i].phone_num.substring(3) + "," + map_data[i].question + "\n" + map_data[i].test_data;
   }
   
   var title = '관리자 페이지 입니다.';

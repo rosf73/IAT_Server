@@ -14,16 +14,10 @@ router.get("/", async (req, res) => {
 
       const participants = await db.query(`SELECT phone_num, progress, iv FROM participant`, []);
       let participant = await Promise.all(
-        participants.filter(e => {
-          const decipher = crypto.createDecipheriv('aes-256-cbc', process.env.CIPHER_KEY, Buffer.from(e.iv, 'hex'));
-          let result = decipher.update(e.phone_num, 'base64', 'utf8');
-          result += decipher.final('utf8');
-        
-          return elem.phone_num === result;
-        })
+        participants.filter(e => elem.phone_num === e.phone_num)
       );
       participant = await Promise.all(
-        participants.map(e => {
+        participant.map(e => {
           const decipher = crypto.createDecipheriv('aes-256-cbc', process.env.CIPHER_KEY, Buffer.from(e.iv, 'hex'));
           let result = decipher.update(e.phone_num, 'base64', 'utf8');
           result += decipher.final('utf8');
@@ -32,7 +26,7 @@ router.get("/", async (req, res) => {
           return e;
         })
       );
-
+      
       elem.phone_num = participant[0].phone_num;
       elem.age = user[0].age;
       elem.gender = user[0].gender;
@@ -47,16 +41,10 @@ router.get("/", async (req, res) => {
       
       const participants = await db.query(`SELECT phone_num, progress, iv FROM participant`, []);
       let participant = await Promise.all(
-        participants.filter(e => {
-          const decipher = crypto.createDecipheriv('aes-256-cbc', process.env.CIPHER_KEY, Buffer.from(e.iv, 'hex'));
-          let result = decipher.update(e.phone_num, 'base64', 'utf8');
-          result += decipher.final('utf8');
-        
-          return elem.phone_num === result;
-        })
+        participants.filter(e => elem.phone_num === e.phone_num)
       );
       participant = await Promise.all(
-        participants.map(e => {
+        participant.map(e => {
           const decipher = crypto.createDecipheriv('aes-256-cbc', process.env.CIPHER_KEY, Buffer.from(e.iv, 'hex'));
           let result = decipher.update(e.phone_num, 'base64', 'utf8');
           result += decipher.final('utf8');
@@ -67,7 +55,7 @@ router.get("/", async (req, res) => {
       );
 
       elem.phone_num = participant[0].phone_num;
-      elem.question = sub_question[0].question_id + "_" + elem.number;
+      elem.question = sub_question[0].question_id + "_" + sub_question[0].number;
       return elem;
     })
   );
@@ -106,8 +94,10 @@ router.get("/", async (req, res) => {
   res.end(html);
 });
 
-router.get("/download", (req, res) => {
-  res.end('download');
+router.get("/manage", (req, res) => {
+  var html = template.MANAGE_HTML();
+  res.writeHead(200);
+  res.end(html);
 });
 
 module.exports = router;

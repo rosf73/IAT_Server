@@ -20,5 +20,9 @@ input {
   margin-bottom: 10px;
 }
 input:focus {
-    outline: none;
+  outline: none;
+}
+#manage {
+  display: table;
+  text-decoration: none;
 }

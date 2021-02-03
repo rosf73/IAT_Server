@@ -56,3 +56,10 @@ exports.insertDataQuery = `
 exports.insertAnswerQuery = `
   INSERT INTO answer(day, answer_data, phone_num) VALUES (?, ?, ?)
 `;
+
+exports.updateMeetingQuery = `
+  UPDATE participant SET meeting = ? WHERE phone_num = ?
+`;
+exports.updateDayQuery = `
+  UPDATE participant SET day = ? WHERE phone_num = ?
+`;

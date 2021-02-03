@@ -2,6 +2,32 @@ const router = require('express').Router()
 
 const db = require('../../db')
 
+router.get("/table", (req, res) => {
+  db.all(`SELECT * FROM table_case`, (err, rows) => {
+    if (err) {
+      res.status(400).json({ "error": err.message });
+      return;
+    }
+    res.json({
+      "message": "success",
+      "data": rows
+    });
+  });
+});
+
+router.get("/sub", (req, res) => {
+  db.all(`SELECT * FROM sub_question`, (err, rows) => {
+    if (err) {
+      res.status(400).json({ "error": err.message });
+      return;
+    }
+    res.json({
+      "message": "success",
+      "data": rows
+    });
+  });
+});
+
 router.get("/all", async (req, res) => {
   const sql = `SELECT * FROM question ORDER BY question_id ASC`;
   const result = await db.query(sql, []);

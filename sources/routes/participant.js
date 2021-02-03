@@ -2,7 +2,7 @@ const router = require('express').Router()
 const crypto = require('crypto')
 
 const db = require('../../db')
-const { insertParticipantQuery } = require('../query')
+const { insertParticipantQuery, updateMeetingQuery, updateDayQuery } = require('../query')
 
 router.get("/all", (req, res) => {
   db.all(`SELECT * FROM participant`, (err, rows) => {
@@ -15,7 +15,7 @@ router.get("/all", (req, res) => {
 });
 
 router.post("/signin", async (req, res) => {
-  const participants = await db.query(`SELECT phone_num, progress, iv FROM participant`, []);
+  const participants = await db.query(`SELECT phone_num, day, iv FROM participant`, []);
   const participant = await Promise.all(
     participants.filter(elem => {
       const decipher = crypto.createDecipheriv('aes-256-cbc', process.env.CIPHER_KEY, Buffer.from(elem.iv, 'hex'));
@@ -27,7 +27,7 @@ router.post("/signin", async (req, res) => {
   );
   
   if (participant.length > 0)
-    res.send("EXIST" + participant[0].progress);
+    res.send("EXIST");
   else
     res.send("NO_EXIST");
 });
@@ -67,6 +67,70 @@ router.post("/signup", (req, res) => {
     }
     res.send("SUCCESS_SIGNUP");
   });
-})
+});
+
+router.post('/upmeet', async (req, res) => {
+  var errors = [];
+  if (!req.body.phone_num) {
+    errors.push("No phone number specified");
+  }
+  if (req.body.meeting === undefined || req.body.meeting === null) {
+    errors.push("No meeting specified");
+  }
+  if (errors.length) {
+    res.status(400).json({ "error": errors.join(",") });
+    return;
+  }
+
+  const participants = await db.query(`SELECT phone_num, iv FROM participant`, []);
+  const participant = await Promise.all(
+    participants.filter(elem => {
+      const decipher = crypto.createDecipheriv('aes-256-cbc', process.env.CIPHER_KEY, Buffer.from(elem.iv, 'hex'));
+      let result = decipher.update(elem.phone_num, 'base64', 'utf8');
+      result += decipher.final('utf8');
+
+      return req.body.phone_num === result;
+    })
+  );
+  
+  var params = [req.body.meeting, participant[0].phone_num];
+  db.run(updateMeetingQuery, params, (err, result) => {
+    if (err) {
+      res.status(400).json({ "error": err.message })
+      return;
+    }
+    res.send("SUCCESS_UPDATE");
+  });
+});
+
+router.post('/upday', async (req, res) => {
+  if (!req.body.phone_num) {
+    res.status(400).json({ "error": "No phone number specified" });
+    return;
+  }
+  
+  const participants = await db.query(`SELECT phone_num, day, iv FROM participant`, []);
+  const participant = await Promise.all(
+    participants.filter(elem => {
+      const decipher = crypto.createDecipheriv('aes-256-cbc', process.env.CIPHER_KEY, Buffer.from(elem.iv, 'hex'));
+      let result = decipher.update(elem.phone_num, 'base64', 'utf8');
+      result += decipher.final('utf8');
+    
+      return req.body.phone_num === result;
+    })
+  );
+  const cipher = crypto.createCipheriv('aes-256-cbc', process.env.CIPHER_KEY, Buffer.from(participant[0].iv, 'hex')); // 재암호화
+  let cipher_pn = cipher.update(req.body.phone_num, 'utf8', 'base64');
+  cipher_pn += cipher.final('base64');
+
+  var params = [participant[0].day + 1, cipher_pn];
+  db.run(updateDayQuery, params, (err, result) => {
+    if (err) {
+      res.status(400).json({ "error": err.message })
+      return;
+    }
+    res.send("SUCCESS_UPDATE");
+  });
+});
 
 module.exports = router;

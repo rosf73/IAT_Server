@@ -1,3 +1,11 @@
+const keydowncheck = () => {
+  if (event.keyCode == 123) return false;
+  else result;
+}
+const mousedowncheck = () => {
+  if (event.button == 2) alert("우클릭이 제한되어있습니다.");
+}
+
 /**
  * answers download button listener
  * */

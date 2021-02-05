@@ -102,6 +102,12 @@ router.get("/manage", async (req, res) => {
   res.end(html);
 });
 
+router.get("/admin", async (req, res) => {
+  var html = template.ADMIN_HTML();
+  res.writeHead(200);
+  res.end(html);
+});
+
 router.post("/update_giftable", async (req, res) => {
   const giftable = await db.query(`SELECT giftable FROM information`, []);
 
@@ -112,6 +118,21 @@ router.post("/update_giftable", async (req, res) => {
     }
     res.writeHead(302, {Location: `/manage`});
     res.end();
+  });
+});
+
+router.post("/clear_data", (req, res) => {
+  db.run(`DELETE FROM answer WHERE answer_id > 0`, (err) => {
+    db.run(`DELETE FROM data WHERE data_id > 0`, (err) => {
+      db.run(`DELETE FROM participant WHERE age > -10000`, (err) => {
+        if (err) {
+          res.status(400).json({ "error": err.message });
+          return;
+        }
+        res.writeHead(302, {Location: `/admin`});
+        res.end();
+      });
+    });
   });
 });
 

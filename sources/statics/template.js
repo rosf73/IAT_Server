@@ -53,5 +53,28 @@ module.exports = {
       </body>
       </html>
     `;
+  },
+  ADMIN_HTML: () => {
+    return `
+      <!doctype html>
+      <html>
+      <head>
+        <title>IAT 관리자 페이지</title>
+        <link rel="stylesheet" type="text/css" href="/styleSheet/index.css">
+        <script src="/controller/buttonScript.js"></script>
+        <meta charset="utf-8">
+      </head>
+      <body onkeydown="return keydowncheck();" onmousedown="return mousedowncheck();">
+        <h1>어드민 페이지입니다.</h1>
+        <ul class="ubtn">
+          <li>
+            <form action="/clear_data" method="post">
+              <input type="submit" alt="모든 데이터 삭제 버튼" id="clear_data" value="모든 데이터 삭제">
+            </form>
+          </li>
+        </ul>
+      </body>
+      </html>
+    `;
   }
 }

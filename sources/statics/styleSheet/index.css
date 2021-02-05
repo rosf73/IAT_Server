@@ -5,12 +5,17 @@ h1 {
   text-align: center;
   margin-top: 20px;
 }
-.dbtn {
+#manage {
+  display: table;
+  text-decoration: none;
+}
+
+ul {
   display: table;
   padding: 100px;
   text-align: center;
 }
-.dbtn li {
+.dbtn > li {
   display: inline-block;
   align-content: center;
   padding: 100px;
@@ -22,7 +27,6 @@ input {
 input:focus {
   outline: none;
 }
-#manage {
-  display: table;
-  text-decoration: none;
+.ubtn > li > form > p, .ubtn > li > form > input {
+  display: inline-block;
 }

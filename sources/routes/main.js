@@ -94,10 +94,25 @@ router.get("/", async (req, res) => {
   res.end(html);
 });
 
-router.get("/manage", (req, res) => {
-  var html = template.MANAGE_HTML();
+router.get("/manage", async (req, res) => {
+  const giftable = await db.query(`SELECT giftable FROM information`, []);
+
+  var html = template.MANAGE_HTML(giftable[0].giftable);
   res.writeHead(200);
   res.end(html);
+});
+
+router.post("/update_giftable", async (req, res) => {
+  const giftable = await db.query(`SELECT giftable FROM information`, []);
+
+  db.run(`UPDATE information SET giftable = ${!(giftable[0].giftable)} WHERE giftable = ${giftable[0].giftable}`, (err, result) => {
+    if (err) {
+      res.status(400).json({ "error": err.message });
+      return;
+    }
+    res.writeHead(302, {Location: `/manage`});
+    res.end();
+  });
 });
 
 module.exports = router;

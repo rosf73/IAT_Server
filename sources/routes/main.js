@@ -32,6 +32,7 @@ router.get("/", async (req, res) => {
       elem.gender = user[0].gender;
       elem.major = user[0].major;
       elem.grade = user[0].grade;
+      elem.meeting = user[0].meeting;
       return elem;
     })
   );
@@ -76,7 +77,7 @@ router.get("/", async (req, res) => {
   var a_str = "";
   for (var i = 0; i < map_answers.length; i++) {
     a_str += map_answers[i].answer_data;
-    a_str += map_answers[i].age + "," + map_answers[i].gender + "," + map_answers[i].major + "," + map_answers[i].grade + "," + map_answers[i].day + "," + map_answers[i].phone_num.substring(0, 3) + "-" + map_answers[i].phone_num.substring(3) + "\n";
+    a_str += map_answers[i].age + "," + map_answers[i].gender + "," + map_answers[i].major + "," + map_answers[i].grade + "," + map_answers[i].day + "," + map_answers[i].phone_num.substring(0, 3) + "-" + map_answers[i].phone_num.substring(3) + "," + map_answers[i].meeting + "\n";
   }
 
   var d_str = "step,반응 시간(ms),z점수\n";
@@ -86,7 +87,7 @@ router.get("/", async (req, res) => {
   
   var title = '관리자 페이지 입니다.';
   var html = template.MAIN_HTML(title, `
-    <p style="display: none" id="question">${q_str}나이,성별,전공,학교급,날짜,전화번호,</p>
+    <p style="display: none" id="question">${q_str}나이,성별,전공,학교급,날짜,전화번호,면담여부,</p>
     <p style="display: none" id="answer">${a_str}</p>
     <p style="display: none" id="data">${d_str}</p>
   `);
